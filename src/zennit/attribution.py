@@ -505,6 +505,14 @@ class Occlusion(Attributor):
         if not typecheck(stride):
             raise TypeError('Occlusion window must either be an int, or a tuple of ints.')
 
+        def nonpositive(values):
+            return any(v <= 0 for v in (values if isinstance(values, tuple) else (values,)))
+
+        if nonpositive(window):
+            raise ValueError('Occlusion window values must be positive.')
+        if nonpositive(stride):
+            raise ValueError('Occlusion stride values must be positive.')
+
         if occlusion_fn is None:
             occlusion_fn = partial(occlude_independent, fill_fn=torch.zeros_like, invert=False)
         self.occlusion_fn = occlusion_fn

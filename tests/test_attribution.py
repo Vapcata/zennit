@@ -268,3 +268,13 @@ def test_occlusion_stride_window_typecheck(argument, container):
     '''Test whether Occlusion raises a TypeError on incorrect types for window and stride.'''
     with pytest.raises(TypeError):
         Occlusion(model=None, **{argument: container})
+
+
+@pytest.mark.parametrize('argument,container', product(
+    ['window', 'stride'],
+    [0, -1, (0,), (1, 0)]
+))
+def test_occlusion_stride_window_valuecheck(argument, container):
+    '''Test whether Occlusion raises a ValueError for non-positive window or stride.'''
+    with pytest.raises(ValueError):
+        Occlusion(model=None, **{argument: container})
